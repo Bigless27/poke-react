@@ -1,0 +1,24 @@
+.poke-calendar {
+    margin-top: 10px;
+    width: 450px;
+}
+
+.calendar-days {
+    width: 60px;
+    height: 60px;
+    background: light-red;
+    border: 2px solid black;
+}
+
+.space-between {
+    justify-content: space-between;;
+}
+
+.small-txt {
+    font-size: 8px;
+}
+
+.small-img {
+    height: 40px;
+    width: 40px;
+}
