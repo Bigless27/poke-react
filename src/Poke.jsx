@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import "./Poke.css"
 import "./App.css"
 import * as dayjs from 'dayjs'
+import typeMap from './typeMap';
 
 const PokeCalendar = () => {
     const [date, setDate] = useState(dayjs());
@@ -23,20 +24,39 @@ const PokeCalendar = () => {
     }, [])
 
     useEffect(() => {
-        filterArr(date.daysInMonth(), 'fire');
-        createCalendar(date)
+        createCalendar(date);
         return () => {
 
         }
     }, [pokemonArr])
 
+    useEffect(() => {
+        // new object
+        if (!daysArr) return;
+        let newDays = daysArr.map((day, i) => {
+            if (day) {
+                return day.pokemon = { pokemon: typeArr[i], day: day.date() };
+            }
+            return day;
+        })
+        setDaysArr(newDays)
+        return () => {
+
+        }
+    }, [typeArr])
+
+
     const createCalendar = (month) => {
         let firstDay = dayjs(month).startOf('M');
+        let monthNumber = dayjs(month).month();
+        filterArr(date.daysInMonth(), typeMap[monthNumber]);
         let days = Array.apply(null, { length: month.daysInMonth() })
             .map(Number.call, Number)
             .map(n => {
                 return dayjs(firstDay).add(n, 'd');
             });
+
+
         for (let n = 0; n < firstDay.day(); n++) {
             days.unshift(null);
         }
@@ -85,10 +105,15 @@ const PokeCalendar = () => {
                 </div>
                 <div className="flex-container flex-wrap">
                     {daysArr && daysArr.map((v, i) => {
+
                         return <div key={i} className='calendar-days flex-container flex-center '>
-                            {v && v.date()}
-                            <div class="small-txt">{typeArr.length && typeArr[i].name}</div>
-                            <img class="small-img" src={typeArr.length && typeArr[i].sprite} />
+                            {v &&
+                                <>
+                                    <div>{v.day && v.day}</div>
+                                    <div className="small-txt">{v.pokemon && v.pokemon.name}</div>
+                                    <img className="small-img" src={v.pokemon && v.pokemon.sprite} />
+                                </>
+                            }
                         </div>
                     })}
                 </div>
