@@ -1,24 +1,40 @@
 .poke-calendar {
     margin-top: 10px;
-    width: 450px;
+    width: 750px;
 }
 
 .calendar-days {
-    width: 60px;
-    height: 60px;
-    background: light-red;
+    width: 100px;
+    height: 100px;
+    background: rgb(233, 232, 232);
+    border: 2px solid black;
+}
+
+.week-days {
+    width: 100px;
+    height: 100px;
+    background:  lavenderblush;
     border: 2px solid black;
 }
 
 .space-between {
-    justify-content: space-between;;
+    justify-content: space-between;
 }
 
 .small-txt {
-    font-size: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: capitalize;
 }
 
 .small-img {
-    height: 40px;
-    width: 40px;
+    height: 70px;
+    width: 70px;
+}
+
+.date-day {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 12px;
 }

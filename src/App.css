@@ -30,3 +30,7 @@
 .pika {
   margin-right: 20px;
 }
+
+.pos-rel {
+  position: relative;
+}

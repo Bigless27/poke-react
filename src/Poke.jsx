@@ -12,7 +12,7 @@ const PokeCalendar = () => {
 
     useEffect(async () => {
         // 893 pokemon
-        const promises = new Array(600)
+        const promises = new Array(750)
             .fill()
             .map(async (v, i) => await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`));
         var resolved = await Promise.all(promises);
@@ -35,7 +35,11 @@ const PokeCalendar = () => {
         if (!daysArr) return;
         let newDays = daysArr.map((day, i) => {
             if (day) {
-                return day.pokemon = { pokemon: typeArr[i], day: day.date() };
+                if (day.pokemon) {
+                    return day.pokemon = { pokemon: typeArr[i], day: date };
+                } else {
+                    return day.pokemon = { pokemon: typeArr[i], date: day.date() };
+                }
             }
             return day;
         })
@@ -54,8 +58,7 @@ const PokeCalendar = () => {
             .map(Number.call, Number)
             .map(n => {
                 return dayjs(firstDay).add(n, 'd');
-            });
-
+            })
 
         for (let n = 0; n < firstDay.day(); n++) {
             days.unshift(null);
@@ -72,7 +75,6 @@ const PokeCalendar = () => {
         setDate(date.subtract(1, 'M'));
         createCalendar(date);
     }
-
 
     const filterArr = (days, type) => {
         var typePokemonArr = pokemonArr.filter((poke) => {
@@ -94,24 +96,25 @@ const PokeCalendar = () => {
                     <div>{date.format('MMMM ')} {date.format('YYYY ')}</div>
                     <div onClick={nextMonth} className='fa fa-chevron-right'></div>
                 </div>
-                <div className='flex-container '>
-                    <div className='calendar-days flex-container flex-center '>S</div>
-                    <div className='calendar-days flex-container flex-center '>M</div>
-                    <div className='calendar-days flex-container flex-center '>T</div>
-                    <div className='calendar-days flex-container flex-center '>W</div>
-                    <div className='calendar-days flex-container flex-center '>T</div>
-                    <div className='calendar-days flex-container flex-center '>F</div>
-                    <div className='calendar-days flex-container flex-center '>S</div>
+                <div className='flex-container'>
+                    <div className='week-days flex-container flex-center '>S</div>
+                    <div className='week-days flex-container flex-center '>M</div>
+                    <div className='week-days flex-container flex-center '>T</div>
+                    <div className='week-days flex-container flex-center '>W</div>
+                    <div className='week-days flex-container flex-center '>T</div>
+                    <div className='week-days flex-container flex-center '>F</div>
+                    <div className='week-days flex-container flex-center '>S</div>
                 </div>
                 <div className="flex-container flex-wrap">
                     {daysArr && daysArr.map((v, i) => {
-
-                        return <div key={i} className='calendar-days flex-container flex-center '>
+                        return <div key={i} className='calendar-days flex-container flex-center pos-rel'>
                             {v &&
                                 <>
-                                    <div>{v.day && v.day}</div>
-                                    <div className="small-txt">{v.pokemon && v.pokemon.name}</div>
-                                    <img className="small-img" src={v.pokemon && v.pokemon.sprite} />
+                                    <div className="flex-container flex-center flex-col">
+                                        <div className="date-day">{v.day && v.day}</div>
+                                        <img className="small-img" src={v.pokemon && v.pokemon.sprite} />
+                                        <div className="small-txt flex-container flex-wrap">{v.pokemon && v.pokemon.name}</div>
+                                    </div>
                                 </>
                             }
                         </div>

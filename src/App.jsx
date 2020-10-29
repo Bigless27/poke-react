@@ -10,8 +10,8 @@ function App() {
           <img className="pika" height="50px" length="50px" src="/pikachu.gif" />
           <img height="50px" length="50px" src="/loc-logo.png" />
         </div>
+        <PokeCalendar />
       </div>
-      <PokeCalendar />
     </div>
   );
 }
