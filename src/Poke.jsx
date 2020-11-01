@@ -88,9 +88,9 @@ const PokeCalendar = () => {
             <div className="poke-calendar">
                 <div className="flex-container space-between">
                     <div onClick={previousMonth} className='fa fa-chevron-left '></div>
-                    <div>
-                        <div>{state.date.format('MMMM ')} {state.date.format('YYYY ')}</div>
-                        <div>{state.currentType}</div>
+                    <div className="flex-container">
+                        <div className="monthName">{state.date.format('MMMM ')} {state.date.format('YYYY ')}</div>
+                        <div className="type">{state.currentType}</div>
                     </div>
                     <div onClick={nextMonth} className='fa fa-chevron-right'></div>
                 </div>
