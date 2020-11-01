@@ -27,7 +27,7 @@ const PokeCalendar = () => {
 
     useEffect(() => {
         createCalendar(state.date);
-    }, [state.pokemonArr])
+    }, [state.pokemonArr, state.date])
 
     const appendPokemon = (daysArr) => {
         if (!daysArr) return;
@@ -63,19 +63,17 @@ const PokeCalendar = () => {
     const nextMonth = () => {
         const newMonth = state.date.add(1, 'M');
         dispatch({ type: 'UPDATE', payload: { date: newMonth, currentType: typeMap[newMonth.month()] } });
-        createCalendar(newMonth);
     }
 
     const previousMonth = () => {
         const newMonth = state.date.subtract(1, 'M');
         dispatch({ type: 'UPDATE', payload: { date: newMonth, currentType: typeMap[newMonth.month()] } });
-        createCalendar(newMonth);
     }
 
     const filterArr = (type) => {
         var typePokemonArr = state.pokemonArr.filter((poke) => {
             let types = poke.types.map(({ type }) => type.name);
-            return ~types.indexOf(type)
+            return ~types.indexOf(type);
         })
         var types = typePokemonArr.map(({ sprites: { front_default: sprite }, name }) => {
             return { sprite, name };
