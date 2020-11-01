@@ -17,7 +17,7 @@ const PokeCalendar = () => {
             .map(async (v, i) => await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`));
         var resolved = await Promise.all(promises);
         var data = await Promise.all(resolved.map(res => res.json()));
-        setPokemonArr(data);
+        await setPokemonArr(data);
         return () => {
 
         }
@@ -28,18 +28,14 @@ const PokeCalendar = () => {
         return () => {
 
         }
-    }, [pokemonArr])
+    }, [pokemonArr, date])
 
     useEffect(() => {
         // new object
         if (!daysArr) return;
         let newDays = daysArr.map((day, i) => {
             if (day) {
-                if (day.pokemon) {
-                    return day.pokemon = { pokemon: typeArr[i], day: date };
-                } else {
-                    return day.pokemon = { pokemon: typeArr[i], date: day.date() };
-                }
+                return { day: day.date(), ...typeArr[i] };
             }
             return day;
         })
@@ -68,12 +64,10 @@ const PokeCalendar = () => {
 
     const nextMonth = () => {
         setDate(date.add(1, 'M'));
-        createCalendar(date);
     }
 
     const previousMonth = () => {
         setDate(date.subtract(1, 'M'));
-        createCalendar(date);
     }
 
     const filterArr = (days, type) => {
@@ -111,9 +105,9 @@ const PokeCalendar = () => {
                             {v &&
                                 <>
                                     <div className="flex-container flex-center flex-col">
-                                        <div className="date-day">{v.day && v.day}</div>
-                                        <img className="small-img" src={v.pokemon && v.pokemon.sprite} />
-                                        <div className="small-txt flex-container flex-wrap">{v.pokemon && v.pokemon.name}</div>
+                                        <div className="date-day">{v.sprite && v.day}</div>
+                                        <img className="small-img" src={v.sprite} />
+                                        <div className="small-txt flex-container flex-wrap">{v.name}</div>
                                     </div>
                                 </>
                             }
