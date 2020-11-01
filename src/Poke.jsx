@@ -9,15 +9,19 @@ const PokeCalendar = () => {
     const [daysArr, setDaysArr] = useState(null);
     const [pokemonArr, setPokemonArr] = useState([]);
     const [typeArr, setTypeArr] = useState([]);
+    const [currentType, setCurrentType] = useState(null);
 
-    useEffect(async () => {
+    useEffect(() => {
         // 893 pokemon
-        const promises = new Array(750)
-            .fill()
-            .map(async (v, i) => await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`));
-        var resolved = await Promise.all(promises);
-        var data = await Promise.all(resolved.map(res => res.json()));
-        await setPokemonArr(data);
+        async function sendRequest() {
+            const promises = new Array(750)
+                .fill()
+                .map(async (v, i) => await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`));
+            var resolved = await Promise.all(promises);
+            var data = await Promise.all(resolved.map(res => res.json()));
+            await setPokemonArr(data);
+        }
+        sendRequest();
         return () => {
 
         }
@@ -49,7 +53,8 @@ const PokeCalendar = () => {
     const createCalendar = (month) => {
         let firstDay = dayjs(month).startOf('M');
         let monthNumber = dayjs(month).month();
-        filterArr(date.daysInMonth(), typeMap[monthNumber]);
+        setCurrentType(typeMap[monthNumber]);
+        filterArr(typeMap[monthNumber]);
         let days = Array.apply(null, { length: month.daysInMonth() })
             .map(Number.call, Number)
             .map(n => {
@@ -70,7 +75,7 @@ const PokeCalendar = () => {
         setDate(date.subtract(1, 'M'));
     }
 
-    const filterArr = (days, type) => {
+    const filterArr = (type) => {
         var typePokemonArr = pokemonArr.filter((poke) => {
             let types = poke.types.map(({ type }) => type.name);
             return ~types.indexOf(type)
@@ -87,7 +92,10 @@ const PokeCalendar = () => {
             <div className="poke-calendar">
                 <div className="flex-container space-between">
                     <div onClick={previousMonth} className='fa fa-chevron-left '></div>
-                    <div>{date.format('MMMM ')} {date.format('YYYY ')}</div>
+                    <div>
+                        <div>{date.format('MMMM ')} {date.format('YYYY ')}</div>
+                        <div>{currentType}</div>
+                    </div>
                     <div onClick={nextMonth} className='fa fa-chevron-right'></div>
                 </div>
                 <div className='flex-container'>
