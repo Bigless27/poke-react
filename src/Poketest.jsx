@@ -4,7 +4,7 @@ import "./App.css"
 import * as dayjs from 'dayjs'
 import typeMap from './typeMap';
 
-class PokeCalendar extends React.Component {
+class PokeTestCalendar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,36 +17,36 @@ class PokeCalendar extends React.Component {
     }
 
     async componentDidMount() {
-        this.createPokeCalendar(this.state.date);
+        this.createPokeCalendar(this.state.date)
         const promises = new Array(750)
             .fill()
-            .map(async (v, i) => await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`));
-        let resolved = await Promise.all(promises);
-        let resolvedFilter = resolved.filter(res => res.ok);
-        let data = await Promise.all(resolvedFilter.map(res => res.json()));
-        this.setState((prevState) => {
+            .map(async (v, i) => await fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`))
+        var resolved = await Promise.all(promises);
+        let removenull = resolved.filter(res => res.ok);
+        var data = await Promise.all(removenull.map(res => res.json()));
+        this.setState((state) => {
             return {
-                ...prevState,
+                ...state,
                 pokemonArr: data
             }
-        }, () => this.createPokeCalendar(this.state.date))
+        }, () => this.createPokeCalendar(this.state.date));
     }
 
     createPokeCalendar = (month) => {
         let firstDay = dayjs(month).startOf('M');
         let days = Array.apply(null, { length: month.daysInMonth() })
             .map(Number.call, Number)
-            .map((n) => {
-                return dayjs(firstDay).add(n, 'd');
-            })
-        for (let n = 0; n < firstDay.day(); n++) {
+            .map((days) => {
+                return dayjs(firstDay).add(days, 'd');
+            });
+        for (let i = 0; i < firstDay.day(); i++) {
             days.unshift(null);
-        }
+        };
 
         days = this.appendPokemon(days);
-        this.setState((prevState) => {
+        this.setState((state) => {
             return {
-                ...prevState,
+                ...state,
                 daysArr: days
             }
         })
@@ -54,50 +54,48 @@ class PokeCalendar extends React.Component {
 
     appendPokemon = (daysArr) => {
         if (!daysArr) return;
-        const filteredState = this.filterArr(typeMap[this.state.date.month()]);
-        this.setState((prevState) => {
+        const filterState = this.filterArr(typeMap[this.state.date.month()]);
+        this.setState((state) => {
             return {
-                ...prevState,
-                typeArr: filteredState
+                tyeArr: filterState
             }
         })
         let newDays = daysArr.map((day, i) => {
             if (day) {
-                return { day: day.date(), ...filteredState[i] }
+                return { day: day.date(), ...filterState[i] }
             }
-            return day;
+            return day
         })
-        return newDays;
+        return newDays
     }
 
     nextMonth = () => {
         const newMonth = this.state.date.add(1, 'M');
-        this.setState((prevState) => {
+        this.setState((state) => {
             return {
-                ...prevState,
+                ...state,
                 date: newMonth,
                 currentType: typeMap[newMonth.month()]
             }
-        }, () => this.createPokeCalendar(newMonth))
+        }, () => this.createPokeCalendar(newMonth));
     }
 
     previousMonth = () => {
         const newMonth = this.state.date.subtract(1, 'M');
-        this.setState((prevState) => {
+        this.setState((state) => {
             return {
-                ...prevState,
+                ...state,
                 date: newMonth,
                 currentType: typeMap[newMonth.month()]
             }
-        }, () => this.createPokeCalendar(newMonth))
+        }, () => this.createPokeCalendar(newMonth));
     }
 
     filterArr = (type) => {
-        let typePokemonArr = this.state.pokemonArr.filter((poke) => {
+        var typePokemonArr = this.state.pokemonArr.filter((poke) => {
             let types = poke.types.map(({ type }) => type.name);
             return ~types.indexOf(type);
-        })
-
+        });
         let types = typePokemonArr.map(({ sprites: { front_default: sprite }, name }) => {
             return { sprite, name };
         })
@@ -116,7 +114,7 @@ class PokeCalendar extends React.Component {
                         </div>
                         <div onClick={this.nextMonth} className='fa fa-chevron-right'></div>
                     </div>
-                    <div className="flex-container flex-center">
+                    <div className="flex-container">
                         <div className='week-days flex-container flex-center '>S</div>
                         <div className='week-days flex-container flex-center '>M</div>
                         <div className='week-days flex-container flex-center '>T</div>
@@ -127,7 +125,7 @@ class PokeCalendar extends React.Component {
                     </div>
                     <div className="flex-container flex-wrap">
                         {this.state.daysArr && this.state.daysArr.map((v, i) => {
-                            return <div key={i} className="flex-container flex-center pos-rel calendar-days">
+                            return <div key={i} className="calendar-days flex-container flex-center pos-rel">
                                 {v &&
                                     <>
                                         <div className="flex-container flex-center flex-col">
@@ -144,4 +142,4 @@ class PokeCalendar extends React.Component {
         )
     }
 }
-export default PokeCalendar;
+export default PokeTestCalendar;
